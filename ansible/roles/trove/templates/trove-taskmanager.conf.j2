@@ -1,0 +1,72 @@
+[DEFAULT]
+debug = {{ trove_logging_debug }}
+
+log_dir = /var/log/kolla/trove
+rpc_backend = rabbit
+
+update_status_on_fail = True
+control_exchange = trove
+db_api_implementation = trove.db.sqlalchemy.api
+trove_auth_url = {{ internal_protocol }}://{{ kolla_internal_fqdn }}:{{ trove_api_port }}/v3
+
+trove_volume_support = True
+block_device_mapping = vdb
+device_path = /dev/vdb
+mount_point = /var/lib/mysql
+volume_time_out=30
+server_delete_time_out=480
+
+nova_proxy_admin_pass = {{ trove_keystone_password }}
+nova_proxy_admin_tenant_name = services
+nova_proxy_admin_user = trove
+
+{% if enable_neutron | bool %}
+network_driver = trove.network.neutron.NeutronDriver
+{% endif %}
+
+trove_dns_support = False
+network_label_regex = .*
+template_path = /etc/trove/templates/
+guest_config = /etc/trove/trove-guestagent.conf
+nova_proxy_admin_tenant_name=services
+use_syslog=False
+
+[database]
+connection = mysql+pymysql://{{ trove_database_user }}:{{ trove_database_password }}@{{ trove_database_address }}/{{ trove_database_name }}
+
+[oslo_messaging_rabbit]
+rabbit_userid = {{ rabbitmq_user }}
+rabbit_password = {{ rabbitmq_password }}
+rabbit_ha_queues = true
+rabbit_hosts = {% for host in groups['rabbitmq'] %}{{ hostvars[host]['ansible_' + hostvars[host]['api_interface']]['ipv4']['address'] }}:{{ rabbitmq_port }}{% if not loop.last %},{% endif %}{% endfor %}
+
+[mysql]
+tcp_ports = 3306
+volume_support = True
+device_path = /dev/vdb
+
+[redis]
+tcp_ports = 6379
+volume_support = False
+
+[cassandra]
+tcp_ports = 7000, 7001, 9042, 9160
+volume_support = True
+device_path = /dev/vdb
+
+[couchbase]
+tcp_ports = 8091, 8092, 4369, 11209-11211, 21100-21199
+volume_support = True
+device_path = /dev/vdb
+
+[mongodb]
+volume_support = True
+device_path = /dev/vdb
+
+[vertica]
+tcp_ports = 5433, 5434, 22, 5444, 5450, 4803
+udp_ports = 5433, 4803, 4804, 6453
+volume_support = True
+device_path = /dev/vdb
+mount_point = /var/lib/vertica
+taskmanager_strategy = trove.common.strategies.cluster.experimental.vertica.taskmanager.VerticaTaskManagerStrategy

@@ -169,6 +169,8 @@ swift_rsync_port: "10873"
 
 sahara_api_port: "8386"
 
+trove_api_port: "8779"
+
 heat_api_port: "8004"
 heat_api_cfn_port: "8000"
 
@@ -278,6 +280,7 @@ enable_senlin: "no"
 enable_swift: "no"
 enable_telegraf: "no"
 enable_tempest: "no"
+enable_trove: "no"
 enable_vmtp: "no"
 enable_watcher: "no"
 

@@ -120,6 +120,9 @@ control
 [tempest:children]
 control
 
+[trove:children]
+control
+
 [senlin:children]
 control
 
@@ -258,6 +261,16 @@ barbican
 
 [barbican-worker:children]
 barbican
+
+# Trove
+[trove-api:children]
+trove
+
+[trove-conductor:children]
+trove
+
+[trove-taskmanager:children]
+trove
 
 # Heat
 [heat-api:children]

@@ -1,0 +1,11 @@
+{
+    "command": "trove-taskmanager --config-file=/etc/trove/trove-taskmanager.conf",
+    "config_files": [
+        {
+            "source": "{{ container_config_directory }}/trove-taskmanager.conf",
+            "dest": "/etc/trove/trove-taskmanager.conf",
+            "owner": "trove",
+            "perm": "0600"
+        }
+    ]
+}
